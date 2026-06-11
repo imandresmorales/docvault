@@ -51,6 +51,29 @@ cp frontend/.env.example frontend/.env.local
 
 > ⚠️ **Security**: Never commit `.env` files. They are excluded in `.gitignore`.
 
+### Database Setup
+
+**Option A: Docker (recommended)**
+
+```bash
+# Start PostgreSQL
+docker compose up -d
+
+# Verify it's running
+docker compose ps
+```
+
+**Option B: Local PostgreSQL**
+
+If you have PostgreSQL installed locally, create the database manually:
+
+```sql
+CREATE USER docvault_user WITH PASSWORD 'your_secure_password';
+CREATE DATABASE docvault OWNER docvault_user;
+```
+
+Then update `DATABASE_URL` in your `backend/.env` file accordingly.
+
 ## License
 
 MIT
