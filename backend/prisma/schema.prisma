@@ -1,0 +1,28 @@
+// ==============================================
+// DocVault - Prisma Schema
+// ==============================================
+// Database models for the document repository.
+// Run `npx prisma migrate dev` after changes.
+// ==============================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Represents an authenticated user of the system.
+/// Passwords are stored as bcrypt hashes — never in plain text.
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // bcrypt hash, never exposed in API responses
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
