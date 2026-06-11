@@ -1,0 +1,27 @@
+{
+  "name": "docvault",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DocVault - Secure Document Repository with AI-powered summaries",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "concurrently \"npm run build:backend\" \"npm run build:frontend\"",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "lint": "concurrently \"npm run lint:backend\" \"npm run lint:frontend\"",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "concurrently \"npm run format:backend\" \"npm run format:frontend\"",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "prisma:generate": "cd backend && npx prisma generate",
+    "prisma:migrate": "cd backend && npx prisma migrate dev",
+    "prisma:studio": "cd backend && npx prisma studio",
+    "setup": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../backend && npx prisma generate"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
