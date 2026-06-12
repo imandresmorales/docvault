@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import * as fs from 'fs';
 
 @Injectable()
 export class DocumentsService {
@@ -39,5 +40,18 @@ export class DocumentsService {
     }
     
     return document;
+  }
+
+  async remove(id: string, userId: string) {
+    const document = await this.findOne(id, userId);
+
+    // Delete file from disk
+    if (fs.existsSync(document.path)) {
+      fs.unlinkSync(document.path);
+    }
+
+    return this.prisma.document.delete({
+      where: { id },
+    });
   }
 }
