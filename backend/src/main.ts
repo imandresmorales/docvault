@@ -1,26 +1,29 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT', 3001);
-  const corsOrigin = configService.get<string>('CORS_ORIGIN', 'http://localhost:3000');
-
-  // Security: Configure CORS with explicit origin (no wildcard in production)
+  // Configure CORS for frontend
   app.enableCors({
-    origin: corsOrigin,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   });
 
-  // Security: Set global API prefix to avoid route collisions
-  app.setGlobalPrefix('api');
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
-  await app.listen(port);
-  console.log(`🚀 DocVault API running on http://localhost:${port}/api`);
+  // Global exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
