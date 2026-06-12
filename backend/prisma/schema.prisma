@@ -11,18 +11,41 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 /// Represents an authenticated user of the system.
 /// Passwords are stored as bcrypt hashes — never in plain text.
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // bcrypt hash, never exposed in API responses
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String     // bcrypt hash, never exposed in API responses
   name      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  documents Document[]
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+/// Represents a document uploaded by a user.
+model Document {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  mimeType     String   @map("mime_type")
+  size         Int
+  path         String
+  tags         String
+  category     String?
+  
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("documents")
 }
