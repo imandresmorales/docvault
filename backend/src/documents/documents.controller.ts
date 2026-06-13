@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Param, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentsService } from './documents.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -49,17 +49,40 @@ export class DocumentsController {
   @Get(':id/download')
   async download(@Param('id') id: string, @Request() req: any, @Res() res: Response) {
     const document = await this.documentsService.findOne(id, req.user.id);
-    
+
     if (!fs.existsSync(document.path)) {
       throw new BadRequestException('El archivo físico no existe');
     }
 
     res.set({
       'Content-Type': document.mimeType,
-      'Content-Disposition': `attachment; filename="${document.originalName}"`,
+      'Content-Disposition': `attachment; filename="${encodeURIComponent(document.originalName)}"`,
+      'Content-Length': String(document.size),
     });
-    
+
     const fileStream = fs.createReadStream(document.path);
+    fileStream.pipe(res);
+  }
+
+  /**
+   * GET /documents/:id/preview
+   * Streams the file inline for browser preview (PDF, images, plain text).
+   * Returns 415 Unsupported Media Type for non-previewable formats.
+   */
+  @Get(':id/preview')
+  async preview(@Param('id') id: string, @Request() req: any, @Res() res: Response) {
+    const { filePath, mimeType, document } = await this.documentsService.getPreviewInfo(id, req.user.id);
+
+    res.set({
+      'Content-Type': mimeType,
+      // 'inline' tells the browser to display the file instead of downloading it
+      'Content-Disposition': `inline; filename="${encodeURIComponent(document.originalName)}"`,
+      'Content-Length': String(document.size),
+      // Allow the frontend (same origin or configured CORS origin) to embed the preview
+      'X-Content-Type-Options': 'nosniff',
+    });
+
+    const fileStream = fs.createReadStream(filePath);
     fileStream.pipe(res);
   }
 }

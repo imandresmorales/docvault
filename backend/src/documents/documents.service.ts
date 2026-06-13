@@ -1,6 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as fs from 'fs';
+import * as path from 'path';
+
+/** MIME types that can be previewed inline in the browser */
+const PREVIEWABLE_TYPES = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'text/plain',
+  'text/markdown',
+]);
 
 @Injectable()
 export class DocumentsService {
@@ -53,5 +66,30 @@ export class DocumentsService {
     return this.prisma.document.delete({
       where: { id },
     });
+  }
+
+  /**
+   * Returns preview metadata.
+   * Throws UnsupportedMediaTypeException if the file type cannot be previewed.
+   * The controller is responsible for streaming the file.
+   */
+  async getPreviewInfo(id: string, userId: string) {
+    const document = await this.findOne(id, userId);
+
+    if (!PREVIEWABLE_TYPES.has(document.mimeType)) {
+      throw new UnsupportedMediaTypeException(
+        `Vista previa no disponible para este tipo de archivo (${document.mimeType}). Descarga el archivo para abrirlo.`,
+      );
+    }
+
+    if (!fs.existsSync(document.path)) {
+      throw new NotFoundException('El archivo físico no se encuentra en el servidor.');
+    }
+
+    return {
+      document,
+      filePath: path.resolve(document.path),
+      mimeType: document.mimeType,
+    };
   }
 }
