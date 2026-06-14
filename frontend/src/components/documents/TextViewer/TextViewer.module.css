@@ -1,0 +1,105 @@
+.viewer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 320px;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -1px;
+}
+
+.matchCount {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.copyBtn {
+  margin-left: auto;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.copyBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* Code table */
+.codeWrapper {
+  overflow: auto;
+  max-height: 600px;
+}
+
+.codeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.lineNumber {
+  user-select: none;
+  text-align: right;
+  padding: 0 var(--spacing-3) 0 var(--spacing-4);
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  min-width: 48px;
+  font-variant-numeric: tabular-nums;
+  vertical-align: top;
+  position: sticky;
+  left: 0;
+}
+
+.lineContent {
+  padding: 0 var(--spacing-4);
+  white-space: pre;
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+.matchRow .lineNumber,
+.matchRow .lineContent {
+  background-color: rgba(37, 99, 235, 0.07);
+}
+
+.mark {
+  background-color: rgba(234, 179, 8, 0.35);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 2px;
+}
