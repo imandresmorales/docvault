@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getDocument, deleteDocument, Document, formatFileSize, getFileIcon, getDownloadUrl } from '@/lib/documents';
+import PreviewModal from '@/components/documents/PreviewModal/PreviewModal';
 import styles from './detail.module.css';
 
 export default function DocumentDetailPage() {
@@ -15,6 +16,9 @@ export default function DocumentDetailPage() {
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     getDocument(id)
@@ -89,11 +93,19 @@ export default function DocumentDetailPage() {
 
       {/* Actions */}
       <div className={styles.actions}>
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowPreview(true)}
+          aria-label={`Vista previa de ${document.title}`}
+        >
+          👁️ Vista Previa
+        </button>
         <a
           href={getDownloadUrl(document.id)}
-          className="btn btn-primary"
+          className="btn"
           download={document.originalName}
           aria-label={`Descargar ${document.originalName}`}
+          style={{ border: '1px solid var(--border-color)' }}
         >
           ⬇️ Descargar
         </a>
@@ -147,6 +159,15 @@ export default function DocumentDetailPage() {
           </div>
         )}
       </section>
+
+      {/* Preview modal */}
+      {showPreview && (
+        <PreviewModal
+          document={document}
+          previewUrl={`${API_URL}/documents/${document.id}/preview`}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
 
       {/* Delete confirmation */}
       {confirmDelete && (
