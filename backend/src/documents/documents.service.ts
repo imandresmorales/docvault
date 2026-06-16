@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException, UnsupportedMediaTypeException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { AiService } from '../ai/ai.service';
+import { TextExtractorService } from '../ai/text-extractor.service';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -17,7 +19,11 @@ const PREVIEWABLE_TYPES = new Set([
 
 @Injectable()
 export class DocumentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private aiService: AiService,
+    private textExtractor: TextExtractorService,
+  ) {}
 
   async create(userId: string, file: Express.Multer.File, metadata: any) {
     return this.prisma.document.create({
@@ -90,6 +96,37 @@ export class DocumentsService {
       document,
       filePath: path.resolve(document.path),
       mimeType: document.mimeType,
+    };
+  }
+
+  /**
+   * Extracts text from the document and generates an AI summary.
+   * Caches nothing — each call goes to OpenAI.
+   */
+  async getSummary(id: string, userId: string) {
+    const document = await this.findOne(id, userId);
+    const filePath = path.resolve(document.path);
+    const text = await this.textExtractor.extract(filePath, document.mimeType);
+    const result = await this.aiService.generateSummary(text, document.title);
+    return {
+      documentId: id,
+      title: document.title,
+      ...result,
+    };
+  }
+
+  /**
+   * Answers a question about the document using its extracted text as context.
+   */
+  async answerQuestion(id: string, userId: string, question: string) {
+    const document = await this.findOne(id, userId);
+    const filePath = path.resolve(document.path);
+    const text = await this.textExtractor.extract(filePath, document.mimeType);
+    const answer = await this.aiService.answerQuestion(question, text, document.title);
+    return {
+      documentId: id,
+      question,
+      answer,
     };
   }
 }

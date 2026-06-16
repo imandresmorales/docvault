@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Delete, Param, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentsService } from './documents.service';
+import { AskQuestionDto } from './dto/ask-question.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -84,5 +85,30 @@ export class DocumentsController {
 
     const fileStream = fs.createReadStream(filePath);
     fileStream.pipe(res);
+  }
+
+  /**
+   * GET /documents/:id/summary
+   * Extracts text from the document and generates an AI summary.
+   * Requires OPENAI_API_KEY to be configured.
+   * Returns 503 Service Unavailable if the AI service is not configured.
+   */
+  @Get(':id/summary')
+  async getSummary(@Param('id') id: string, @Request() req: any) {
+    return this.documentsService.getSummary(id, req.user.id);
+  }
+
+  /**
+   * POST /documents/:id/ask
+   * Answers a question about the document using its text as context.
+   * Body: { question: string }
+   */
+  @Post(':id/ask')
+  async askQuestion(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Body() dto: AskQuestionDto,
+  ) {
+    return this.documentsService.answerQuestion(id, req.user.id, dto.question);
   }
 }
