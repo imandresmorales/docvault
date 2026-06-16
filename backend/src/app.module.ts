@@ -7,6 +7,7 @@ import { validateEnv } from './config/env.validation';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DocumentsModule } from './documents/documents.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { DocumentsModule } from './documents/documents.module';
     UsersModule,
     AuthModule,
     DocumentsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
