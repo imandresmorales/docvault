@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { getDocument, deleteDocument, Document, formatFileSize, getFileIcon, getDownloadUrl } from '@/lib/documents';
 import PreviewModal from '@/components/documents/PreviewModal/PreviewModal';
 import AiSummaryPanel from '@/components/ai/AiSummaryPanel';
+import AiChatPanel from '@/components/ai/AiChatPanel';
 import styles from './detail.module.css';
 
 export default function DocumentDetailPage() {
@@ -163,6 +164,9 @@ export default function DocumentDetailPage() {
 
       {/* AI Summary Panel */}
       <AiSummaryPanel documentId={document.id} documentTitle={document.title} />
+
+      {/* AI Q&A Chat */}
+      <AiChatPanel documentId={document.id} documentTitle={document.title} />
 
       {/* Preview modal */}
       {showPreview && (
