@@ -129,4 +129,71 @@ export class DocumentsService {
       answer,
     };
   }
+
+  /**
+   * Returns per-category counts and aggregated file size for a user's documents.
+   * Also includes totals and a breakdown by MIME type.
+   */
+  async getStats(userId: string) {
+    const documents = await this.prisma.document.findMany({
+      where: { userId },
+      select: { category: true, mimeType: true, size: true, createdAt: true },
+    });
+
+    const totalCount = documents.length;
+    const totalSize  = documents.reduce((sum, d) => sum + d.size, 0);
+
+    // Group by category
+    const categoryMap = new Map<string, { count: number; size: number }>();
+    for (const doc of documents) {
+      const cat = doc.category ?? 'Sin categoría';
+      const entry = categoryMap.get(cat) ?? { count: 0, size: 0 };
+      entry.count += 1;
+      entry.size  += doc.size;
+      categoryMap.set(cat, entry);
+    }
+
+    const byCategory = Array.from(categoryMap.entries())
+      .map(([name, data]) => ({ name, ...data }))
+      .sort((a, b) => b.count - a.count);
+
+    // Group by MIME type label
+    const mimeMap = new Map<string, number>();
+    for (const doc of documents) {
+      mimeMap.set(doc.mimeType, (mimeMap.get(doc.mimeType) ?? 0) + 1);
+    }
+
+    const byMimeType = Array.from(mimeMap.entries())
+      .map(([mimeType, count]) => ({ mimeType, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Documents uploaded per month (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const recentDocs = documents.filter((d) => new Date(d.createdAt) >= sixMonthsAgo);
+    const monthMap = new Map<string, number>();
+    for (const doc of recentDocs) {
+      const key = new Date(doc.createdAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' });
+      monthMap.set(key, (monthMap.get(key) ?? 0) + 1);
+    }
+    const byMonth = Array.from(monthMap.entries()).map(([month, count]) => ({ month, count }));
+
+    return { totalCount, totalSize, byCategory, byMimeType, byMonth };
+  }
+
+  /**
+   * Returns all documents for a user filtered by category.
+   * Pass null / 'Sin categoría' to retrieve uncategorized documents.
+   */
+  async findByCategory(userId: string, category: string) {
+    const isUncategorized = category === 'Sin categoría' || category === 'null';
+    return this.prisma.document.findMany({
+      where: {
+        userId,
+        category: isUncategorized ? null : category,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

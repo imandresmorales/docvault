@@ -37,6 +37,29 @@ export class DocumentsController {
     return this.documentsService.findAll(req.user.id);
   }
 
+  /**
+   * GET /documents/stats
+   * Returns per-category counts, MIME type breakdown, and monthly upload activity.
+   * NOTE: This static segment MUST come before the ':id' dynamic route.
+   */
+  @Get('stats')
+  async getStats(@Request() req: any) {
+    return this.documentsService.getStats(req.user.id);
+  }
+
+  /**
+   * GET /documents/category/:category
+   * Returns all documents belonging to a specific category for the current user.
+   * Use 'Sin categoría' to retrieve uncategorized documents.
+   */
+  @Get('category/:category')
+  async findByCategory(
+    @Param('category') category: string,
+    @Request() req: any,
+  ) {
+    return this.documentsService.findByCategory(req.user.id, decodeURIComponent(category));
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req: any) {
     return this.documentsService.findOne(id, req.user.id);
