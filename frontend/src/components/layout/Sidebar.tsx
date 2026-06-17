@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
   { href: '/dashboard/documents', label: 'Mis Documentos', icon: '📄' },
   { href: '/dashboard/upload', label: 'Subir Documento', icon: '⬆️' },
+  { href: '/dashboard/statistics', label: 'Estadísticas', icon: '📊' },
   { href: '/dashboard/settings', label: 'Configuración', icon: '⚙️' },
 ];
 

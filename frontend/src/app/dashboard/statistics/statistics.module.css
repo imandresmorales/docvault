@@ -1,0 +1,229 @@
+.page { max-width: 900px; }
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-8);
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.subtitle { color: var(--text-secondary); }
+
+/* Skeleton grid */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+.skeleton {
+  height: 96px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Summary cards */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+/* Charts layout */
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-6);
+}
+
+.fullWidth { grid-column: 1 / -1; }
+
+.chartCard {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-6);
+}
+
+.chartTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-6);
+}
+
+.empty {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  padding: var(--spacing-4) 0;
+  text-align: center;
+}
+
+/* Bar chart (categories) */
+.barChart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 120px 1fr 36px;
+  align-items: center;
+  gap: var(--spacing-3);
+  text-decoration: none;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-lg);
+  transition: background-color 0.15s;
+  cursor: pointer;
+}
+
+.barRow:hover {
+  background-color: var(--bg-primary);
+}
+
+.barLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barTrack {
+  flex: 1;
+  height: 8px;
+  background-color: var(--border-color);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.barCount {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* MIME type list */
+.mimeList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.mimeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+}
+
+.mimeIcon { font-size: 1.25rem; flex-shrink: 0; }
+
+.mimeInfo { flex: 1; min-width: 0; }
+
+.mimeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-1);
+}
+
+.mimeName {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.mimeCount {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Monthly bar chart */
+.monthChart {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-3);
+  height: 160px;
+  padding-top: var(--spacing-6);
+}
+
+.monthCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.monthCount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.monthBar {
+  width: 100%;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: height 0.4s ease;
+  min-height: 8px;
+}
+
+.monthLabel {
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Error */
+.error {
+  padding: var(--spacing-4);
+  background-color: rgba(239, 68, 68, 0.08);
+  color: var(--error);
+  border-radius: var(--radius-md);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .chartsGrid { grid-template-columns: 1fr; }
+  .summaryGrid { grid-template-columns: 1fr 1fr; }
+}
