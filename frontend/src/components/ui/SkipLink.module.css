@@ -1,0 +1,26 @@
+.skipLink {
+  position: fixed;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
+  z-index: 9999;
+  padding: var(--spacing-3) var(--spacing-6);
+  background-color: var(--accent-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  box-shadow: var(--shadow-md);
+
+  /* Hidden by default — visible only when focused */
+  transform: translateY(-120%);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+  opacity: 1;
+  outline: 3px solid white;
+  outline-offset: 2px;
+}

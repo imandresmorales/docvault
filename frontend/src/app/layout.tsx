@@ -3,12 +3,14 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import SkipLink from '@/components/ui/SkipLink';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'DocVault - Document Repository',
-  description: 'A full-stack document management system',
+  title: 'DocVault - Repositorio de Documentos',
+  description: 'Sistema de gestión de documentos seguro, con previsualización y análisis de IA',
+  keywords: ['documentos', 'repositorio', 'IA', 'gestión documental'],
 };
 
 export default function RootLayout({
@@ -19,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.variable}>
+        <SkipLink />
         <ThemeProvider>
           <AuthProvider>
             {children}
