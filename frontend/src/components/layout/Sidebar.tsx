@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
@@ -50,6 +51,9 @@ export default function Sidebar() {
             <p className={styles.userName}>{user?.name}</p>
             <p className={styles.userEmail}>{user?.email}</p>
           </div>
+        </div>
+        <div className={styles.themeToggleWrapper}>
+          <ThemeToggle variant="full" />
         </div>
         <button
           onClick={logout}

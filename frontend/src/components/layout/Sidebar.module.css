@@ -138,3 +138,7 @@
   border-color: var(--error);
   color: var(--error);
 }
+
+.themeToggleWrapper {
+  margin-bottom: var(--spacing-2);
+}

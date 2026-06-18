@@ -1,0 +1,68 @@
+/* Icon-style toggle (pill switch) */
+.iconBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  background-color: var(--border-color);
+  border: 1px solid var(--border-color);
+  padding: 2px;
+  transition: background-color 0.25s ease;
+  position: relative;
+}
+
+.track.dark {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease;
+  transform: translateX(0);
+  flex-shrink: 0;
+}
+
+.track.dark .thumb {
+  transform: translateX(24px);
+}
+
+/* Full-style button */
+.fullBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.fullBtn:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
