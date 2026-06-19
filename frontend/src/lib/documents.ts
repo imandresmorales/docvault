@@ -107,3 +107,36 @@ export const ALLOWED_TYPES = [
 ];
 
 export const CATEGORIES = ['Sin categoría', 'Trabajo', 'Personal', 'Finanzas', 'Legal', 'Otro'];
+
+/* ──────────────────────────────────────────── */
+/* Search                                       */
+/* ──────────────────────────────────────────── */
+
+export interface SearchParams {
+  q?: string;
+  category?: string;
+  type?: 'pdf' | 'image' | 'text' | 'all';
+  sortBy?: 'createdAt' | 'title' | 'size';
+  order?: 'asc' | 'desc';
+  limit?: number;
+  offset?: number;
+}
+
+export interface SearchResult {
+  total: number;
+  limit: number;
+  offset: number;
+  items: Document[];
+}
+
+export async function searchDocuments(params: SearchParams): Promise<SearchResult> {
+  const qs = new URLSearchParams();
+  if (params.q)        qs.set('q',        params.q);
+  if (params.category) qs.set('category', params.category);
+  if (params.type)     qs.set('type',     params.type);
+  if (params.sortBy)   qs.set('sortBy',   params.sortBy);
+  if (params.order)    qs.set('order',    params.order);
+  if (params.limit  != null) qs.set('limit',  String(params.limit));
+  if (params.offset != null) qs.set('offset', String(params.offset));
+  return fetchApi(`/documents/search?${qs.toString()}`);
+}

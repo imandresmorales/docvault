@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/layout/Sidebar';
+import GlobalSearch from '@/components/search/GlobalSearch';
 import styles from './layout.module.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -29,9 +30,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className={styles.dashboardWrapper}>
       <Sidebar />
-      <main id="main-content" className={styles.mainContent}>
-        {children}
-      </main>
+      <div className={styles.contentArea}>
+        {/* Top header bar with global search */}
+        <header className={styles.topBar} role="banner">
+          <GlobalSearch />
+        </header>
+        <main id="main-content" className={styles.mainContent}>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
