@@ -1,4 +1,20 @@
-.page { max-width: 1000px; }
+.page { max-width: 1200px; }
+
+/* Two-column layout: filter sidebar + document list */
+.bodyLayout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--spacing-6);
+  align-items: flex-start;
+}
+
+.mainArea {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .bodyLayout { grid-template-columns: 1fr; }
+}
 
 .header {
   display: flex;
