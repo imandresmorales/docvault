@@ -196,4 +196,76 @@ export class DocumentsService {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  /**
+   * Full-text search across title, description, originalName and tags.
+   * Supports optional filters for category and MIME type group,
+   * configurable sort and pagination.
+   *
+   * Security: userId is always enforced — users can only search their own documents.
+   */
+  async search(
+    userId: string,
+    q?: string,
+    category?: string,
+    type?: string,
+    sortBy: 'createdAt' | 'title' | 'size' = 'createdAt',
+    order: 'asc' | 'desc' = 'desc',
+    limit = 50,
+    offset = 0,
+  ) {
+    // Sanitise inputs
+    const safeQ = q?.trim() ?? '';
+    const safeLimit  = Math.min(Math.max(limit, 1), 100);
+    const safeOffset = Math.max(offset, 0);
+
+    // Build the `where` clause
+    const mimeFilter = this.buildMimeFilter(type);
+
+    const where: any = {
+      userId,
+      ...(category && {
+        category:
+          category === 'Sin categoría' || category === 'null' ? null : category,
+      }),
+      ...(mimeFilter && { mimeType: mimeFilter }),
+    };
+
+    // Full-text search: OR across multiple string columns
+    if (safeQ) {
+      where.OR = [
+        { title:        { contains: safeQ } },
+        { description:  { contains: safeQ } },
+        { originalName: { contains: safeQ } },
+        { tags:         { contains: safeQ } },
+      ];
+    }
+
+    const [total, items] = await Promise.all([
+      this.prisma.document.count({ where }),
+      this.prisma.document.findMany({
+        where,
+        orderBy: { [sortBy]: order },
+        take: safeLimit,
+        skip: safeOffset,
+      }),
+    ]);
+
+    return {
+      total,
+      limit: safeLimit,
+      offset: safeOffset,
+      items,
+    };
+  }
+
+  /** Maps a MIME type group name to a Prisma filter condition */
+  private buildMimeFilter(type?: string) {
+    switch (type) {
+      case 'pdf':   return { equals: 'application/pdf' };
+      case 'image': return { startsWith: 'image/' };
+      case 'text':  return { in: ['text/plain', 'text/markdown', 'text/csv'] };
+      default:      return null; // 'all' or undefined → no filter
+    }
+  }
 }

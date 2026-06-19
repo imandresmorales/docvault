@@ -1,7 +1,8 @@
-import { Controller, Post, Get, Delete, Param, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, Query, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentsService } from './documents.service';
 import { AskQuestionDto } from './dto/ask-question.dto';
+import { SearchDocumentsDto } from './dto/search-documents.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -58,6 +59,29 @@ export class DocumentsController {
     @Request() req: any,
   ) {
     return this.documentsService.findByCategory(req.user.id, decodeURIComponent(category));
+  }
+
+  /**
+   * GET /documents/search?q=&category=&type=&sortBy=&order=&limit=&offset=
+   * Full-text search across title, description, originalName and tags.
+   * All query parameters are optional — omitting `q` returns all documents.
+   * NOTE: Must be before the ':id' dynamic route to avoid shadowing.
+   */
+  @Get('search')
+  async search(
+    @Query() dto: SearchDocumentsDto,
+    @Request() req: any,
+  ) {
+    return this.documentsService.search(
+      req.user.id,
+      dto.q,
+      dto.category,
+      dto.type,
+      dto.sortBy,
+      dto.order,
+      dto.limit,
+      dto.offset,
+    );
   }
 
   @Get(':id')
