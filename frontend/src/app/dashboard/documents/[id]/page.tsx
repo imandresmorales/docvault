@@ -7,6 +7,7 @@ import { getDocument, deleteDocument, Document, formatFileSize, getFileIcon, get
 import PreviewModal from '@/components/documents/PreviewModal/PreviewModal';
 import AiSummaryPanel from '@/components/ai/AiSummaryPanel';
 import AiChatPanel from '@/components/ai/AiChatPanel';
+import EditDocumentModal from '@/components/documents/EditDocumentModal/EditDocumentModal';
 import styles from './detail.module.css';
 
 export default function DocumentDetailPage() {
@@ -19,6 +20,7 @@ export default function DocumentDetailPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -118,6 +120,14 @@ export default function DocumentDetailPage() {
         >
           🗑️ Eliminar
         </button>
+        <button
+          className="btn"
+          onClick={() => setShowEdit(true)}
+          aria-label="Editar metadatos del documento"
+          style={{ border: '1px solid var(--border-color)' }}
+        >
+          ✏️ Editar
+        </button>
       </div>
 
       {/* Metadata */}
@@ -197,6 +207,18 @@ export default function DocumentDetailPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Edit document modal */}
+      {showEdit && (
+        <EditDocumentModal
+          document={document}
+          onClose={() => setShowEdit(false)}
+          onSaved={(updated) => {
+            setDocument(updated);
+            setShowEdit(false);
+          }}
+        />
       )}
     </div>
   );
