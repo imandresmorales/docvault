@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Document, CATEGORIES } from '@/lib/documents';
 import { updateDocument } from '@/lib/update-document';
+import { useToast } from '@/contexts/ToastContext';
 import FocusTrap from '@/components/ui/FocusTrap';
 import styles from './EditDocumentModal.module.css';
 
@@ -19,6 +20,7 @@ export default function EditDocumentModal({ document, onClose, onSaved }: Props)
   const [tags,        setTags]        = useState(document.tags ?? '');
   const [saving,      setSaving]      = useState(false);
   const [error,       setError]       = useState('');
+  const { addToast } = useToast();
 
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -65,9 +67,12 @@ export default function EditDocumentModal({ document, onClose, onSaved }: Props)
         tags:        tags.trim(),
         updatedAt:   new Date().toISOString(),
       };
+      addToast('Documento actualizado correctamente.', 'success');
       onSaved(updated);
     } catch (err: any) {
-      setError(err.message || 'Error al guardar los cambios');
+      const msg = err.message || 'Error al guardar los cambios';
+      setError(msg);
+      addToast(msg, 'error');
       setSaving(false);
     }
   };

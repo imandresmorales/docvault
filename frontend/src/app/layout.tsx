@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ToastProvider } from '@/contexts/ToastContext';
 import SkipLink from '@/components/ui/SkipLink';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -23,9 +24,11 @@ export default function RootLayout({
       <body className={inter.variable}>
         <SkipLink />
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

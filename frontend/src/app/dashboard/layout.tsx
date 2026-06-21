@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/layout/Sidebar';
 import GlobalSearch from '@/components/search/GlobalSearch';
+import ToastContainer from '@/components/ui/Toast/ToastContainer';
 import styles from './layout.module.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +40,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </main>
       </div>
+      {/* Global toast notifications */}
+      <ToastContainer />
     </div>
   );
 }
