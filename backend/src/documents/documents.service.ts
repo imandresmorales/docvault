@@ -75,6 +75,46 @@ export class DocumentsService {
   }
 
   /**
+   * Updates editable metadata fields for a document.
+   * Security: userId ownership is verified by findOne before any write.
+   * Tags are normalised: lowercased, trimmed, deduplicated and re-joined.
+   */
+  async update(
+    id: string,
+    userId: string,
+    dto: { title?: string; description?: string; category?: string | null; tags?: string },
+  ) {
+    // Verify ownership — throws NotFoundException if document not found or wrong user
+    await this.findOne(id, userId);
+
+    // Normalise tags: lowercase, trim, deduplicate, remove empty segments
+    let normalizedTags: string | undefined;
+    if (typeof dto.tags === 'string') {
+      const tagSet = new Set(
+        dto.tags
+          .split(',')
+          .map((t) => t.trim().toLowerCase())
+          .filter(Boolean),
+      );
+      normalizedTags = Array.from(tagSet).join(',');
+    }
+
+    // Resolve category: empty string → null (uncategorized)
+    const category =
+      dto.category === '' || dto.category === null ? null : dto.category;
+
+    return this.prisma.document.update({
+      where: { id },
+      data: {
+        ...(dto.title       !== undefined && { title:       dto.title }),
+        ...(dto.description !== undefined && { description: dto.description }),
+        ...(dto.category    !== undefined && { category }),
+        ...(normalizedTags  !== undefined && { tags:        normalizedTags }),
+      },
+    });
+  }
+
+  /**
    * Returns preview metadata.
    * Throws UnsupportedMediaTypeException if the file type cannot be previewed.
    * The controller is responsible for streaming the file.

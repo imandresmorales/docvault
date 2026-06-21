@@ -1,8 +1,9 @@
-import { Controller, Post, Get, Delete, Param, Query, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Query, UseGuards, UseInterceptors, UploadedFile, Body, Request, BadRequestException, Res, StreamableFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentsService } from './documents.service';
 import { AskQuestionDto } from './dto/ask-question.dto';
 import { SearchDocumentsDto } from './dto/search-documents.dto';
+import { UpdateDocumentDto } from './dto/update-document.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -92,6 +93,22 @@ export class DocumentsController {
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req: any) {
     return this.documentsService.remove(id, req.user.id);
+  }
+
+  /**
+   * PATCH /documents/:id
+   * Updates editable metadata: title, description, category, tags.
+   * Only the document owner may update their document (enforced in the service).
+   * The request body is validated by UpdateDocumentDto — unknown fields are rejected
+   * by the global ValidationPipe (whitelist + forbidNonWhitelisted).
+   */
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Body() dto: UpdateDocumentDto,
+  ) {
+    return this.documentsService.update(id, req.user.id, dto);
   }
 
   @Get(':id/download')
