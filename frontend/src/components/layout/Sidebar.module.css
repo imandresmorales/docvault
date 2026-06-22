@@ -7,15 +7,87 @@
   border-right: 1px solid var(--border-color);
   padding: var(--spacing-6) 0;
   flex-shrink: 0;
+  /* Mobile: hidden off-screen by default */
+  transition: transform 0.25s ease;
+}
+
+/* Logo row (logo + mobile close button) */
+.logoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-6) var(--spacing-6);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-4);
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  padding: 0 var(--spacing-6) var(--spacing-6);
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: var(--spacing-4);
+}
+
+/* Mobile-only close button inside the sidebar */
+.closeBtn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  min-width: unset;
+  min-height: unset;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* Mobile backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 39; /* just below the sidebar */
+  backdrop-filter: blur(1px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Mobile breakpoint ──────────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 40;
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  /* Slide in when open */
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Show the in-sidebar close button on mobile */
+  .closeBtn {
+    display: flex;
+  }
 }
 
 .logoIcon {

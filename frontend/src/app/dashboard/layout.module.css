@@ -12,10 +12,11 @@
   overflow: hidden;
 }
 
-/* Sticky search header */
+/* Sticky search + hamburger header */
 .topBar {
   display: flex;
   align-items: center;
+  gap: var(--spacing-3);
   padding: var(--spacing-3) var(--spacing-8);
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
@@ -50,4 +51,55 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ── Hamburger button (hidden on desktop) ────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  min-width: unset;
+  min-height: unset;
+  padding: var(--spacing-2);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.hamburger:hover {
+  border-color: var(--accent-primary);
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
+.hamburgerLine {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--text-secondary);
+  transition: background-color 0.15s;
+}
+
+.hamburger:hover .hamburgerLine {
+  background-color: var(--accent-primary);
+}
+
+/* ── Mobile breakpoint ────────────────────────── */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .topBar {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .mainContent {
+    padding: var(--spacing-4);
+  }
 }
