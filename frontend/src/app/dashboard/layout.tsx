@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/layout/Sidebar';
 import GlobalSearch from '@/components/search/GlobalSearch';
 import ToastContainer from '@/components/ui/Toast/ToastContainer';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 import styles from './layout.module.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -64,6 +65,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
       {/* Global toast notifications */}
       <ToastContainer />
+      {/* Scroll-to-top utility button */}
+      <ScrollToTop />
     </div>
   );
 }

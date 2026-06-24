@@ -1,0 +1,30 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+  background-color: var(--bg-primary);
+}
+
+.pulse {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), #7c3aed);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.pulseSmall {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border-color);
+  animation: pulse 1.4s ease-in-out 0.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(0.8); opacity: 0.4; }
+}
