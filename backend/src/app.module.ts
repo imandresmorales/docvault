@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { validateEnv } from './config/env.validation';
 import { UsersModule } from './users/users.module';
@@ -38,7 +37,6 @@ import { AiModule } from './ai/ai.module';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     // Apply rate limiting globally to all routes
     {
       provide: APP_GUARD,
