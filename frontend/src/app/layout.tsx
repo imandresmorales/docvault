@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   keywords: ['documentos', 'repositorio', 'gestión documental', 'IA', 'PDF', 'previsualización'],
   authors: [{ name: 'DocVault' }],
   creator: 'DocVault',
+  manifest: '/manifest.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'es_ES',
@@ -40,6 +41,14 @@ export const metadata: Metadata = {
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)',  color: '#0f172a' },
   ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'DocVault',
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
